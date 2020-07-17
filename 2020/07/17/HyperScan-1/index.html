@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>HyperScan-1 | Perfectxx&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="概述HyperScan是一个正则表达式库，可以同时匹配多个表达式。支持Snort和Suricata集成，应用于IDS&#x2F;IPS&#x2F;FW等场景[1]。具体使用于流量监测场景。[似乎]要用Snort或Suricata抓包，并用HyperScan与恶意行为特征库进行文本匹配。[2] 原理Hyperscan以自动机理论为基础，其工作流程主要分成两个部分：编译期(compiletime)和运行期(run-tim">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HyperScan-1">
+<meta property="og:url" content="http://www.perfectxxlowiq.com/2020/07/17/HyperScan-1/index.html">
+<meta property="og:site_name" content="Perfectxx&#39;s Blog">
+<meta property="og:description" content="概述HyperScan是一个正则表达式库，可以同时匹配多个表达式。支持Snort和Suricata集成，应用于IDS&#x2F;IPS&#x2F;FW等场景[1]。具体使用于流量监测场景。[似乎]要用Snort或Suricata抓包，并用HyperScan与恶意行为特征库进行文本匹配。[2] 原理Hyperscan以自动机理论为基础，其工作流程主要分成两个部分：编译期(compiletime)和运行期(run-tim">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.perfectxxlowiq.com/2020/07/17/HyperScan-1/p1.jpg">
+<meta property="og:image" content="http://www.perfectxxlowiq.com/2020/07/17/HyperScan-1/p2.jpg">
+<meta property="article:published_time" content="2020-07-17T12:52:12.000Z">
+<meta property="article:modified_time" content="2020-07-17T13:05:03.530Z">
+<meta property="article:author" content="Perfectxx">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://www.perfectxxlowiq.com/2020/07/17/HyperScan-1/p1.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Perfectxx&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Perfectxx&#39;s Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://www.Perfectxxlowiq.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-HyperScan-1" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/07/17/HyperScan-1/" class="article-date">
+  <time datetime="2020-07-17T12:52:12.000Z" itemprop="datePublished">2020-07-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      HyperScan-1
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>HyperScan是一个正则表达式库，可以同时匹配多个表达式。支持Snort和Suricata集成，应用于IDS/IPS/FW等场景<a href="https://zhuanlan.zhihu.com/p/40603962" target="_blank" rel="noopener">[1]</a>。具体使用于流量监测场景。[似乎]要用Snort或Suricata抓包，并用HyperScan与恶意行为特征库进行文本匹配。<a href="https://zhuanlan.zhihu.com/p/64742715" target="_blank" rel="noopener">[2]</a></p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>Hyperscan以自动机理论为基础，其工作流程主要分成两个部分：编译期(compiletime)和运行期(run-time)。</p>
+<h2 id="编译期"><a href="#编译期" class="headerlink" title="编译期"></a>编译期</h2><p>Hyperscan 自带C++编写的正则表达式编译器。如图1所示，它将正则表达式作为输入，针对不同的IA平台，用户定义的模式及特殊语法，经过复杂的图分析及优化过程，生成对应的数据库。另外，生成的数据库可以被序列化后保存在内存中，以供运行期提取使用。<br><img src="/2020/07/17/HyperScan-1/p1.jpg" alt="Compiling Patterns"></p>
+<h2 id="运行期"><a href="#运行期" class="headerlink" title="运行期"></a>运行期</h2><p>Hyperscan的运行期是通过C语言来开发的。图2展示了Hyperscan在运行期的主要流程。用户需要预先分配一段内存来存储临时匹配状态信息，之后利用编译生成的数据库调用Hyperscan内部的匹配引擎(NFA, DFA等)来对输入进行模式匹配。Hyperscan在引擎中使用Intel处理器所具有的SIMD指令进行加速。同时，用户可以通过回调函数来自定义匹配发生后采取的行为。由于生成的数据库是只读的，用户可以在多个CPU核或多线程场景下共享数据库来提升匹配扩展性。<br><img src="/2020/07/17/HyperScan-1/p2.jpg" alt="Scanning for Patterns"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.perfectxxlowiq.com/2020/07/17/HyperScan-1/" data-id="ckcpz2nxz0000touod8ko1507" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/07/17/HyperScan-1/">HyperScan-1</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 Perfectxx<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
